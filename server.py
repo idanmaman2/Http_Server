@@ -3,17 +3,17 @@ import socket
 import os
 import sys
 
-# TO DO: set constants
+
 IP = '0.0.0.0'
 PORT = 80
-DEFAULT_BUFFER_SIZE = 2048  # default size of http packet
+DEFAULT_BUFFER_SIZE = 2048 
 SOCKET_TIMEOUT = 1000
 root = os.getcwd()
 print(os.path.isfile("./webroot/index.html"))
 DEFAULT_URL = "/index.html"
 ROOT_w = "/webroot"
 print(DEFAULT_URL)
-# all the Moved Files and the path that they Moved to(To There)
+
 REDIRECTION_DICTIONARY = {'/imgs/Moved1.jpg': '/jpg/ToThere1.jpg', '/imgs/Moved2.jpg': '/jpg/ToThere2.jpg'}
 FORBIDDEN = ("/imgs/forbidden1.jpg", "/imgs/forbidden2.jpg")  # all the forbidden files
 HTTP_VERSION = "HTTP/1.1"
@@ -37,8 +37,6 @@ def get_file_data(filename):
 def handle_client_request(resource, client_socket):
     print("resource: ", resource)
     """ Check the required resource, generate proper HTTP response and send to client"""
-    # TO DO : add code that given a resource (URL and parameters) generates the proper response
-    # return
     filename = ""
     code = "200 OK"
     if resource == '' or resource == '/':
@@ -66,23 +64,22 @@ def handle_client_request(resource, client_socket):
     print("the file type is : ", filetype)
     if filetype == "ico":
         http_header = HTTP_VERSION + " %s\r\nContent-Length: %s\r\nContent-Type:image/x-icon\r\n\r\n" % \
-                      (code, os.path.getsize(filename))  # TO DO: generate proper HTTP header
+                      (code, os.path.getsize(filename))  
     elif filetype == "css":
         http_header = HTTP_VERSION + " %s\r\nContent-Length: %s\r\nContent-Type: text/css; charset=utf-8\r\n\r\n" % \
-                      (code, os.path.getsize(filename))  # TO DO: generate proper HTTP header
+                      (code, os.path.getsize(filename))  
     elif filetype == "js":
         http_header = HTTP_VERSION + " %s\r\nContent-Length: %s\r\nContent-Type: text/js; charset=utf-8\r\n\r\n" % \
-                      (code, os.path.getsize(filename))  # TO DO: generate proper HTTP header
+                      (code, os.path.getsize(filename))  
     elif filetype == 'html':
         http_header = HTTP_VERSION + " %s\r\nContent-Length: %s\r\nContent-Type: text/html; charset=utf-8\r\n\r\n" % \
-                      (code, os.path.getsize(filename))  # TO DO: generate proper HTTP header
+                      (code, os.path.getsize(filename)) 
     elif filetype == 'jpg':
         http_header = HTTP_VERSION + " %s\r\nContent-Length: %s\r\nContent-Type: image/jpeg\r\n\r\n" % \
-                      (code, os.path.getsize(filename))  # TO DO: generate proper HTTP header
+                      (code, os.path.getsize(filename))
     else:
         print("File Found Type is UnknownConverts as a text - text shower readonly")
         http_header = HTTP_VERSION + "500  Not Found\r\n\r\n"
-        # read this file as text instead of send error page - i found this more useful
         print("BAD HTTP REQUEST")
     client_socket.send(http_header.encode())
     client_socket.send(data)
@@ -98,7 +95,6 @@ def validate_http_request(request):
     if len(arr[0].split(" ")) == 3 and chek_for_valid_get(request):
         HTTP_VERSION = arr[0].split(" ")[2]
         return True, arr[0].split(" ")[1]
-        # TO DO: write function
     return False, "Error"
 
 
@@ -111,10 +107,6 @@ def handle_client(client_socket):
     """ Handles client requests: verifies client's requests are legal HTTP, calls function to handle the requests """
     print('Client connected')
     http_req = client_socket.recv(DEFAULT_BUFFER_SIZE).decode()
-
-    # client_socket.send(FIXED_RESPONSE.encode())
-    # TO DO: insert code that receives client request
-    # ...
     client_request = http_req
     print(client_request)
     valid_http, resource = validate_http_request(client_request)
@@ -130,7 +122,6 @@ def handle_client(client_socket):
 
 
 def main():
-    # Open a socket and loop forever while waiting for clients
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((IP, PORT))
     server_socket.listen()
@@ -144,5 +135,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # Call the main handler function
     main()
